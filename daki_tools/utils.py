@@ -7,9 +7,10 @@ import pandas as pd
 
 def load(file) -> pd.DataFrame:
     """
+    loads csv or parquet file from the forecast-competition.
 
-    :param file:
-    :return:
+    :param file: `str`
+    :return: `pandas.DataFrame`
     """
     if ".csv" in file:
         data = pd.read_csv(file)
@@ -25,22 +26,26 @@ def load(file) -> pd.DataFrame:
 
 def subset(data, location) -> pd.DataFrame:
     """
+    Creates a single time-series for a specified location.
 
-    :param data:
-    :param location:
-    :return:
+    :param data: `pandas.DataFrame` with columns `location`, `value` and the index `target`, the reporting date
+    :param location: `int` county id
+    :return: `pandas.DataFrame`
     """
     return data.query(f"location == {location}").drop("location", axis=1)
 
 
 def batch_forecast(data, model, fh, n):
     """
+    Fits and simulates forecasts for a specified model for all locations in the data.
+    The simulations are concatenated to a `pandas.DataFrame` that matches the forecast-competition
+    submission requirements https://github.com/rki-daki-fws/forecast-competition/blob/main/submissions/README.md
 
-    :param data:
-    :param model:
-    :param fh:
-    :param n:
-    :return:
+    :param data: `pandas.DataFrame` with columns `location`, `value` and index `target`
+    :param model: `forecast.Ets` or `forecast.AutoArima`
+    :param fh: `int` forecasting horizon
+    :param n: `int` number of samples/repititions
+    :return: `pandas.DataFrame`
     """
 
     def fn(x):
