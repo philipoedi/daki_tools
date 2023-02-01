@@ -3,14 +3,17 @@
 # Press Umschalt+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+from daki_tools import forecast, utils
 
+data = utils.load("data\\test.csv")
+data["value"] = data["value"]
+model = forecast.Ets(error="add", trend="add")
+y_pred = utils.batch_forecast(data, model, fh=14, n=100)
+y_pred_i = y_pred.query("location == 9162")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+sns.lineplot(x=y_pred_i["target"].astype(int), y=y_pred_i["value"])
+plt.show()

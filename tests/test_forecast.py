@@ -55,3 +55,9 @@ def test_ets_fit_predict_outcome(csv_data):
     ets_aa = forecast.Ets(error="add", trend="add")
     y_pred = ets_aa.fit_predict(csv_data, 14, 10)
     assert y_pred.shape == (14 * 10, 3)
+
+
+def test_ets_fit_predict_outcome_log(csv_data):
+    ets_aa = forecast.Ets(error="add", trend="add", log_transform=False)
+    y_pred = ets_aa.fit_predict(csv_data, 14, 10)
+    assert ets_aa.log_transform == False
