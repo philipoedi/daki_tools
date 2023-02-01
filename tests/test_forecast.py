@@ -7,14 +7,14 @@ import os
 import pytest
 from statsmodels.tsa.exponential_smoothing.ets import ETSResultsWrapper
 
-from daki_tools import forecast, load
+from daki_tools import forecast, utils
 
 
 @pytest.fixture
 def csv_data():
     file = os.path.join("data", "test.csv")
-    data = load.load(file)
-    return load.subset(data, 1001)
+    data = utils.load(file)
+    return utils.subset(data, 1001)
 
 
 def test_ets_fit(csv_data):
@@ -46,6 +46,12 @@ def test_ets_init():
 
 
 def test_ets_fit_predict(csv_data):
+    ets_aa = forecast.Ets(error="add", trend="add")
+    y_pred = ets_aa.fit_predict(csv_data, 14, 10)
+    assert y_pred.shape == (14 * 10, 3)
+
+
+def test_ets_fit_predict_outcome(csv_data):
     ets_aa = forecast.Ets(error="add", trend="add")
     y_pred = ets_aa.fit_predict(csv_data, 14, 10)
     assert y_pred.shape == (14 * 10, 3)

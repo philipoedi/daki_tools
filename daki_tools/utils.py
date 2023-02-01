@@ -1,4 +1,4 @@
-# load.py
+# utils.py
 # Philip Oedi
 # 2023-01-31
 
@@ -26,3 +26,23 @@ def subset(data, location) -> pd.DataFrame:
     :return:
     """
     return data.query(f"location == {location}").drop("location", axis=1)
+
+
+def batch_forecast(data, model, fh, n):
+    """
+
+    :param data:
+    :param model:
+    :param fh:
+    :param n:
+    :return:
+    """
+
+    def fn(x):
+        y_pred = model.fit_predict(subset(data, x), fh, n)
+        y_pred["location"] = x
+        return y_pred
+
+    y_pred = pd.concat(map(fn, pd.unique(data.location)))
+    y_pred = y_pred[["location", "target", "sample_id", "value"]]
+    return y_pred
