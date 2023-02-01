@@ -5,6 +5,7 @@
 import os
 
 import pytest
+from pmdarima.arima import arima
 from statsmodels.tsa.exponential_smoothing.ets import ETSResultsWrapper
 
 from daki_tools import forecast, utils
@@ -61,3 +62,15 @@ def test_ets_fit_predict_outcome_log(csv_data):
     ets_aa = forecast.Ets(error="add", trend="add", log_transform=False)
     y_pred = ets_aa.fit_predict(csv_data, 14, 10)
     assert ets_aa.log_transform == False
+
+
+def test_arima_fit(csv_data):
+    m = forecast.AutoArima()
+    m.fit(csv_data)
+    assert isinstance(m.model, arima.ARIMA)
+
+
+def test_arima_fit_predict(csv_data):
+    m = forecast.AutoArima()
+    y_pred = m.fit_predict(csv_data, fh=4, n=10)
+    assert y_pred.shape == (4 * 10, 3)
