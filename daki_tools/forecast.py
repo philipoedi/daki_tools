@@ -18,6 +18,10 @@ class BaseForecast(ABC):
     def predict(self, fh, n):
         pass
 
+    def fit_predict(self, data, fh, n):
+        self.fit(data)
+        return self.predict(fh, n)
+
 
 class Ets(BaseForecast):
     def __init__(self, log_transform=True, **kwargs):
@@ -55,7 +59,3 @@ class Ets(BaseForecast):
         if self.log_transform:
             y_pred.loc[:, "value"] = np.exp(y_pred["value"])
         return y_pred
-
-    def fit_predict(self, data, fh, n):
-        self.fit(data)
-        return self.predict(fh, n)

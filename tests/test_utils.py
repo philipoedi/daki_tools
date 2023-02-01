@@ -18,6 +18,11 @@ def csv_data():
     return utils.load(file)
 
 
+def test_load_parquet():
+    file = os.path.join("data", "test.parquet")
+    assert isinstance(utils.load(file), pd.DataFrame)
+
+
 def test_load_dataframe(csv_data):
     """
 

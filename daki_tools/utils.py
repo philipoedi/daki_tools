@@ -11,7 +11,12 @@ def load(file) -> pd.DataFrame:
     :param file:
     :return:
     """
-    data = pd.read_csv(file)
+    if ".csv" in file:
+        data = pd.read_csv(file)
+    elif ".parquet" in file:
+        data = pd.read_parquet(file)
+    else:
+        print("Choose parquet or csv file")
     data["target"] = pd.to_datetime(data["target"], infer_datetime_format=True)
     data["target"] = pd.PeriodIndex(data["target"], freq="d")
     data.set_index("target", inplace=True)
